@@ -5,6 +5,7 @@ import 'package:flutter_app_book_store/data/remote/order_service.dart';
 import 'package:flutter_app_book_store/data/repo/order_repo.dart';
 import 'package:flutter_app_book_store/event/confirm_order_event.dart';
 import 'package:flutter_app_book_store/event/pop_event.dart';
+import 'package:flutter_app_book_store/event/rebuild_event.dart';
 import 'package:flutter_app_book_store/event/update_cart_event.dart';
 import 'package:flutter_app_book_store/module/checkout/checkout_bloc.dart';
 import 'package:flutter_app_book_store/shared/app_color.dart';
@@ -31,7 +32,7 @@ class CheckoutPage extends StatelessWidget {
           value: OrderService(),
         ),
         ProxyProvider2<OrderService, String, OrderRepo>(
-          update: (context, orderService, orderId, previous) => OrderRepo(
+          builder: (context, orderService, orderId, previous) => OrderRepo(
             orderService: orderService,
             orderId: orderId,
           ),
@@ -57,8 +58,8 @@ class _ShoppingCartContainerState extends State<ShoppingCartContainer> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => CheckoutBloc(
+    return Provider<CheckoutBloc>.value(
+      value: CheckoutBloc(
         orderRepo: Provider.of(context),
       ),
       child: Consumer<CheckoutBloc>(
@@ -88,13 +89,13 @@ class _ShoppingCartState extends State<ShoppingCart> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<Object>.value(
+    return StreamProvider<dynamic>.value(
       value: widget.bloc.orderStream,
       initialData: null,
       catchError: (context, err) {
         return err;
       },
-      child: Consumer<Object>(
+      child: Consumer<dynamic>(
         builder: (context, data, child) {
           if (data == null) {
             return Center(
@@ -132,8 +133,8 @@ class ConfirmInfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<CheckoutBloc>(builder: (context, bloc, child) {
-      return Container(
+    return Consumer<CheckoutBloc>(
+      builder: (context, bloc, child) => Container(
         height: 170,
         width: double.infinity,
         child: Column(
@@ -163,8 +164,8 @@ class ConfirmInfoWidget extends StatelessWidget {
             ),
           ],
         ),
-      );
-    });
+      ),
+    );
   }
 }
 

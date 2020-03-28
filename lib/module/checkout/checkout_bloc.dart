@@ -9,7 +9,7 @@ import 'package:flutter_app_book_store/event/update_cart_event.dart';
 import 'package:flutter_app_book_store/shared/model/order.dart';
 import 'package:rxdart/rxdart.dart';
 
-class CheckoutBloc extends BaseBloc with ChangeNotifier {
+class CheckoutBloc extends BaseBloc {
   final OrderRepo _orderRepo;
 
   CheckoutBloc({
@@ -60,7 +60,6 @@ class CheckoutBloc extends BaseBloc with ChangeNotifier {
   @override
   void dispose() {
     super.dispose();
-    print('checkout close');
     _orderSubject.close();
   }
 }

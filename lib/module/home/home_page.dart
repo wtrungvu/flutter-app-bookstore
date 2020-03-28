@@ -27,11 +27,11 @@ class HomePage extends StatelessWidget {
           value: OrderService(),
         ),
         ProxyProvider<ProductService, ProductRepo>(
-          update: (context, productService, previous) =>
+          builder: (context, productService, previous) =>
               ProductRepo(productService: productService),
         ),
         ProxyProvider<OrderService, OrderRepo>(
-          update: (context, orderService, previous) =>
+          builder: (context, orderService, previous) =>
               OrderRepo(orderService: orderService),
         ),
       ],
@@ -47,7 +47,7 @@ class HomePage extends StatelessWidget {
 class ShoppingCartWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
+    return Provider<HomeBloc>.value(
       value: HomeBloc.getInstance(
         productRepo: Provider.of(context),
         orderRepo: Provider.of(context),
@@ -79,13 +79,13 @@ class _CartWidgetState extends State<CartWidget> {
   @override
   Widget build(BuildContext context) {
     return Consumer<HomeBloc>(
-      builder: (context, bloc, child) => StreamProvider<Object>.value(
+      builder: (context, bloc, child) => StreamProvider<dynamic>.value(
         value: bloc.shoppingCartStream,
         initialData: null,
         catchError: (context, error) {
           return error;
         },
-        child: Consumer<Object>(
+        child: Consumer<dynamic>(
           builder: (context, data, child) {
             if (data == null || data is RestError) {
               return Container(
@@ -127,20 +127,20 @@ class _CartWidgetState extends State<CartWidget> {
 class ProductListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
+    return Provider<HomeBloc>.value(
       value: HomeBloc.getInstance(
         productRepo: Provider.of(context),
         orderRepo: Provider.of(context),
       ),
       child: Consumer<HomeBloc>(
         builder: (context, bloc, child) => Container(
-          child: StreamProvider<Object>.value(
+          child: StreamProvider<dynamic>.value(
             value: bloc.getProductList(),
             initialData: null,
             catchError: (context, error) {
               return error;
             },
-            child: Consumer<Object>(
+            child: Consumer<dynamic>(
               builder: (context, data, child) {
                 if (data == null) {
                   return Center(
@@ -161,11 +161,11 @@ class ProductListWidget extends StatelessWidget {
                   );
                 }
 
-                var products = data as List<Product>;
+                data = data as List<Product>;
                 return ListView.builder(
-                    itemCount: products.length,
+                    itemCount: data.length,
                     itemBuilder: (context, index) {
-                      return _buildRow(bloc, products[index]);
+                      return _buildRow(bloc, data[index]);
                     });
               },
             ),

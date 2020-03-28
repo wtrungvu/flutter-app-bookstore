@@ -8,7 +8,7 @@ import 'package:flutter_app_book_store/shared/model/product.dart';
 import 'package:flutter_app_book_store/shared/model/shopping_cart.dart';
 import 'package:rxdart/rxdart.dart';
 
-class HomeBloc extends BaseBloc with ChangeNotifier {
+class HomeBloc extends BaseBloc {
   final ProductRepo _productRepo;
   final OrderRepo _orderRepo;
 
@@ -76,7 +76,6 @@ class HomeBloc extends BaseBloc with ChangeNotifier {
   @override
   void dispose() {
     super.dispose();
-    print("homepage close");
     _shoppingCardSubject.close();
   }
 }
